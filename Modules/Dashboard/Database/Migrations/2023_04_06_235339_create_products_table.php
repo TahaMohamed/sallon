@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('added_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('center_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_active')->default(true);
             $table->unsignedDecimal('price');
             $table->unsignedSmallInteger('quantity');
