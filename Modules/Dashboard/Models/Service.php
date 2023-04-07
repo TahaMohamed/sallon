@@ -17,21 +17,13 @@ class Service extends Model implements TranslatableContract
     protected $guarded = ['id', 'created_at', 'updated_at'];
     public $translatedAttributes = ['name', 'description'];
 
-    public function image(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if ($value){
-                    return asset($value);
-                }
-                //TODO::Add Default value
-                return asset('assets/images/defaults/service.png');
-            },
-            set: fn($value) => upload_image($value, 'users')
-        );
-    }
     public function centers(): BelongsToMany
     {
         return $this->belongsToMany(Center::class);
+    }
+
+    protected function getDefaultImage(): string
+    {
+        return asset('assets/images/defaults/service.png');
     }
 }

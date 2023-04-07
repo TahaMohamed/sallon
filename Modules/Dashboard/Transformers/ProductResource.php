@@ -2,11 +2,12 @@
 
 namespace Modules\Dashboard\Transformers;
 
+use App\Http\Resources\Api\BasicDataResource;
 use App\Http\Resources\Api\GlobalTransResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PackageResource extends JsonResource
+class ProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,8 +26,11 @@ class PackageResource extends JsonResource
                 'id' => $this->id,
                 'name' => $this->name,
                 'description' => $this->description,
+                'quantity' => (float)$this->quantity,
+                'price' => (float)$this->price,
                 'is_active' => (bool)$this->is_active,
-                'features_count' => $this->whenCounted('features'),
+                'category' => BasicDataResource::make($this->whenLoaded('category')),
+                'attachments' => AttachmentResource::collection($this->whenLoaded('attachments')),
                 'created_at' => $this->created_at->format('Y-m-d'),
             ] + $locales;
 

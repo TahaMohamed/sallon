@@ -7,6 +7,7 @@ use App\Traits\MediaOperation;
 use App\Traits\StatisticOperation;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,27 +38,18 @@ class User extends Authenticatable
         );
     }
 
-    public function image(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if ($value){
-                    return asset($value);
-                }
-                //TODO::Add Default value
-                return asset('assets/images/defaults/avatar.png');
-            },
-            set: fn($value) => upload_image($value, 'users')
-        );
-    }
-
-    public function scopeIsBanned($q)
+    public function scopeIsBanned($q): Builder
     {
         return $q->where('unbanned_at','>=',now()->endOfDay());
     }
 
-    public function isBanned()
+    public function isBanned(): bool
     {
         return $this->unbanned_at?->gte(now());
+    }
+
+    public function getDefaultImage(): string
+    {
+        return asset('assets/images/defaults/avatar.png');
     }
 }

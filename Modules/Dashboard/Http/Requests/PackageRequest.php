@@ -16,7 +16,7 @@ class PackageRequest extends FormRequest
     {
         $rules = [
             'is_active' => 'nullable|boolean',
-            'price' => 'required|decimal:0',
+            'price' => 'required|decimal:0,2|gt:0',
             'duration' => 'required|in:' . join(',', Package::casesValues()),
             'features' => 'required|array',
             'features.*' => 'required|exists:package_features,id',
