@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('center_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_active')->default(true);
             $table->unsignedDecimal('price');
-            $table->unsignedSmallInteger('quantity');
+            $table->unsignedSmallInteger('stock');
             $table->timestamps();
         });
 

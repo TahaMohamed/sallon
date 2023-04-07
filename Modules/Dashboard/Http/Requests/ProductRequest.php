@@ -13,7 +13,7 @@ class ProductRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'is_active' => 'nullable|boolean',
             'price' => 'required|decimal:0,2|gt:0',
-            'quantity' => 'required|decimal:0,2|gt:0',
+            'stock' => 'required|decimal:0,2|gt:0',
             'attachments' => 'nullable|array',
             'attachments.*' => 'nullable|mimes:jpg,jpeg,png,svg',
 
