@@ -24,6 +24,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('package_id')->constrained()->cascadeOnDelete();
             $table->string('name');
+            $table->string('short_description', 500)->nullable();
             $table->text('description')->nullable();
             $table->string('locale')->index();
             $table->unique(['package_id', 'locale']);

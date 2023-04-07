@@ -6,14 +6,16 @@ use App\Contracts\RepositoryInterface;
 use App\Repositories\Actions\Operation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Modules\Dashboard\Models\Product;
+use Illuminate\Support\Arr;
+use Modules\Dashboard\Models\Center;
 
-class ProductRepository extends Operation implements RepositoryInterface
+class CenterRepository extends Operation implements RepositoryInterface
 {
-    protected Product $product;
+    protected Center $center;
+
     public function queryBuilder(): Builder
     {
-        return Product::query()
+        return Center::query()
             ->when($this->getConditions(), fn($q) => $this->getConditions())
             ->when($this->getWithRelation(), fn($q) => $this->with($this->getWithRelation()))
             ->when($this->getCountRelation(), fn($q) => $this->withCount($this->getCountRelation()));
@@ -28,16 +30,13 @@ class ProductRepository extends Operation implements RepositoryInterface
 
     public function create(array $data): void
     {
-        $this->store($this->product, $data);
+        $this->store($this->center, $data);
     }
 
     public function update(array $data, int $id): void
     {
-        $product = $this->find($id);
-        $this->store($product, $data);
-        if ($data['deleted_attachments']){
-            $product->attachments()->whereIn('product_media.id',$data['deleted_attachments'])->delete();
-        }
+        $center = $this->find($id);
+        $this->store($center, $data);
     }
 
     public function delete(int $id): bool
@@ -45,7 +44,7 @@ class ProductRepository extends Operation implements RepositoryInterface
         return $this->find($id)->delete();
     }
 
-    public function find(int $id, ?bool $isShow = null): ?Product
+    public function find(int $id, ?bool $isShow = null): ?Center
     {
         return $this->queryBuilder()
             ->when(! is_null($isShow), function ($q) use ($isShow){
@@ -55,11 +54,11 @@ class ProductRepository extends Operation implements RepositoryInterface
             ->findOrFail($id);
     }
 
-    private function store(Product $product, array $data)
+    private function store(Center $center, array $data)
     {
-        $product->fill($data)->save();
-        if ($data['attachments']){
-            $this->product->attachments()->createMany($data['attachments']);
+        $center->fill($data)->save();
+        if ($data['services']){
+            $this->center->services()->sync(Arr::keyBy($data['services'], 'service_id'));
         }
     }
 }

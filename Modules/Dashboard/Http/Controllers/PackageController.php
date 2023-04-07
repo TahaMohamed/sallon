@@ -13,7 +13,6 @@ class PackageController extends DashboardController
     {
         $packages = Package::query()
             ->with('translation')
-            ->withCount('features')
             ->latest('id')
             ->paginate((int)($request->per_page ?? config("globals.pagination.per_page")));
 
@@ -22,8 +21,7 @@ class PackageController extends DashboardController
 
     public function store(PackageRequest $request)
     {
-        $package = Package::create($request->validated() + ['added_by_id' => auth()->id()]);
-        $package->features()->attach($request->validated(['features']));
+        Package::create($request->validated() + ['added_by_id' => auth()->id()]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
@@ -40,7 +38,6 @@ class PackageController extends DashboardController
     private function showOrEdit(int $id, bool $show)
     {
         $package = Package::query()
-            ->withCount('features')
             ->when(!$show, fn($q) => $q->with('translations'))
             ->when($show, fn($q) => $q->with('translation'))
             ->findOrFail($id);
@@ -52,7 +49,6 @@ class PackageController extends DashboardController
     {
         $package = Package::query()->findOrFail($id);
         $package->update($request->validated());
-        $package->features()->sync($request->validated(['features']));
         return $this->successResponse(message: __('dashboard.message.success_update'));
     }
 

@@ -6,6 +6,7 @@ enum Package: string
 {
     case YEARLY = 'yearly';
     case MONTHLY = 'monthly';
+    case FOREVER = 'forever';
 
     public static function casesValues(): array
     {
@@ -20,6 +21,11 @@ enum Package: string
     public static function monthly(): string
     {
         return self::MONTHLY->value;
+    }
+
+    public static function forever(): string
+    {
+        return self::FOREVER->value;
     }
 }
 

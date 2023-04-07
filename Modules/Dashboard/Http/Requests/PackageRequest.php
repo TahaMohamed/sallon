@@ -18,12 +18,11 @@ class PackageRequest extends FormRequest
             'is_active' => 'nullable|boolean',
             'price' => 'required|decimal:0,2|gt:0',
             'duration' => 'required|in:' . join(',', Package::casesValues()),
-            'features' => 'required|array',
-            'features.*' => 'required|exists:package_features,id',
         ];
         foreach (config('translatable.locales') as $locale) {
             $rules["$locale.name"] = 'required|string|max:255|unique:package_translations,name,' . $this->package . ',package_id';
-            $rules["$locale.description"] = 'nullable|string|max:500';
+            $rules["$locale.short_description"] = 'nullable|string|max:300';
+            $rules["$locale.description"] = 'nullable|string|max:2000';
         }
         return $rules;
     }

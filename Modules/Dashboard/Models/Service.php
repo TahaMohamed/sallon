@@ -19,7 +19,7 @@ class Service extends Model implements TranslatableContract
 
     public function centers(): BelongsToMany
     {
-        return $this->belongsToMany(Center::class);
+        return $this->belongsToMany(Center::class)->withPivot(['price','is_available','is_soon']);
     }
 
     protected function getDefaultImage(): string

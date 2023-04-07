@@ -15,8 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('current_package_id')->nullable()->constrained('packages')->nullOnDelete();
+            $table->foreignId('city_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('added_by_id')->nullable()->constrained('users')->nullOnDelete();
             $table->boolean('is_active')->default(true);
+            $table->time('opened_at')->nullable();
+            $table->time('closed_at')->nullable();
+            $table->string('days_off')->nullable();
+            $table->string('image')->nullable();
+            $table->string('phone',20);
+            $table->string('email',50);
+            $table->string('address')->nullable();
             $table->timestamps();
         });
 
@@ -25,6 +33,7 @@ return new class extends Migration
             $table->foreignId('center_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->boolean('is_active')->default(true);
+            $table->string('short_description', 500)->nullable();
             $table->text('description')->nullable();
             $table->string('locale')->index();
             $table->unique(['center_id', 'locale']);

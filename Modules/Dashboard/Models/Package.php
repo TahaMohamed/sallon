@@ -13,7 +13,7 @@ class Package extends Model implements TranslatableContract
 {
     use HasFactory, Translatable, StatisticOperation;
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    public $translatedAttributes = ['name', 'description'];
+    public $translatedAttributes = ['name', 'description', 'short_description'];
 
     protected $casts = [
         'duration' => \App\Enums\Package::class

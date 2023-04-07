@@ -33,6 +33,9 @@ return new class extends Migration
         Schema::create('center_service', function (Blueprint $table) {
             $table->foreignId('center_id')->constrained()->cascadeOnDelete();
             $table->foreignId('service_id')->constrained()->cascadeOnDelete();
+            $table->unsignedDecimal('price');
+            $table->boolean('is_available')->default(true);
+            $table->boolean('is_soon')->default(false);
             $table->unique(['service_id','center_id']);
         });
     }
