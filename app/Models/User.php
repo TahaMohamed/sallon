@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function isBanned(): bool
     {
-        return $this->unbanned_at?->gte(now());
+        return (bool)$this->unbanned_at?->gte(now());
     }
 
     public function getDefaultImage(): string
