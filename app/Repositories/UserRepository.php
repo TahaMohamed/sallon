@@ -5,32 +5,26 @@ namespace App\Repositories;
 use App\Contracts\RepositoryInterface;
 use App\Models\User;
 use App\Repositories\Actions\Operation;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository extends Operation implements RepositoryInterface
 {
-    protected User $user;
-
-    public function queryBuilder(): Builder
+    public function __construct()
     {
-        return User::query()
-            ->when($this->getConditions(), fn($q) => $this->getConditions())
-            ->when($this->getWithRelation(), fn($q) => $this->with($this->getWithRelation()))
-            ->when($this->getCountRelation(), fn($q) => $this->withCount($this->getCountRelation()));
+        $this->setModel();
     }
 
     public function allPaginate(?int $perPage = null): LengthAwarePaginator
     {
-        return $this->queryBuilder()
+        return $this->getQuery()
             ->latest('id')
             ->paginate((int)($perPage ?? config("globals.pagination.per_page")));
     }
 
     public function create(array $data): void
     {
-        $this->store($this->user, $data);
+        $this->store(new User, $data);
     }
 
     public function update(array $data, int $id): void
@@ -46,15 +40,32 @@ class UserRepository extends Operation implements RepositoryInterface
 
     public function find(int $id, ?bool $isShow = null): ?Model
     {
-        return $this->queryBuilder()->findOrFail($id);
+        return $this->getQuery()->findOrFail($id);
     }
 
     private function store(User $user, array $data)
     {
+        if (!$user->getKey()){
+            $data['password'] = User::getIntialPassword();
+        }
+
+        if (is_bool(@$data['is_phone_verified']) &&  $data['is_phone_verified'] && !$user?->phone_verified_at){
+            $data['phone_verified_at'] = now();
+        }
+
+        if (is_bool(@$data['is_email_verified']) &&  $data['is_email_verified'] && !$user?->email_verified_at){
+            $data['email_verified_at'] = now();
+        }
+
         $user->fill($data)->save();
 //        TODO::After make roles
 //        if ($user->user_type === User::ADMIN){
-//            $this->user->roles()->sync($data['roles']);
+//            $user->roles()->sync($data['roles']);
 //        }
+    }
+
+    public function setModel(): void
+    {
+        $this->model = User::class;
     }
 }

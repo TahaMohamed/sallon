@@ -7,7 +7,8 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     PackageController,
     ServiceController,
     CategoryController,
-    ProductController};
+    ProductController,
+    VendorController};
 Route::middleware('auth:api')->get('/dashboard', function (Request $request) {
     return $request->user();
 });
@@ -20,6 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'categories' => CategoryController::class,
         'products' => ProductController::class,
         'centers' => CenterController::class,
+        'vendors' => VendorController::class,
     ], ['except' => ['create']]);
 
     Route::get('country/{country_id}/cities', [CityController::class, 'index']);

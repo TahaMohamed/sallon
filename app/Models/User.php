@@ -7,10 +7,12 @@ use App\Traits\MediaOperation;
 use App\Traits\StatisticOperation;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Dashboard\Models\Center;
 
 class User extends Authenticatable
 {
@@ -38,6 +40,11 @@ class User extends Authenticatable
         );
     }
 
+    public static function getIntialPassword($length = 8): string
+    {
+        return '123445678'; //random_code(length: $length, letters: false,symbols: false);
+    }
+
     public function scopeIsBanned($q): Builder
     {
         return $q->where('unbanned_at','>=',now()->endOfDay());
@@ -51,5 +58,15 @@ class User extends Authenticatable
     public function getDefaultImage(): string
     {
         return asset('assets/images/defaults/avatar.png');
+    }
+
+    public function hasPermission($routeName): bool
+    {
+        return true;
+    }
+
+    public function center(): HasOne
+    {
+        return $this->hasOne(Center::class);
     }
 }

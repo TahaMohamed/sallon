@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('days_off')->nullable();
             $table->string('image')->nullable();
             $table->string('phone',20);
-            $table->string('email',50);
+            $table->string('email',50)->nullable();
             $table->string('address')->nullable();
             $table->string('lat', 7)->nullable();
             $table->string('lng', 7)->nullable();

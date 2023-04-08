@@ -23,7 +23,7 @@ trait MediaOperation
                 //TODO::Add Default value
                 return $this->getDefaultImage() ?? asset('assets/images/defaults/global.png');
             },
-            set: fn($value) => upload_image($value, Str::plural(mb_strtolower(Str::snake(class_basename(static::class)))))
+            set: fn($value) => $value?->isValid() ? upload_image($value, Str::plural(mb_strtolower(Str::snake(class_basename(static::class))))) : null
         );
     }
 }

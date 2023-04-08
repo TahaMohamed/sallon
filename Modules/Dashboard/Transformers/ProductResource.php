@@ -32,6 +32,11 @@ class ProductResource extends JsonResource
                 'category' => BasicDataResource::make($this->whenLoaded('category')),
                 'attachments' => AttachmentResource::collection($this->whenLoaded('attachments')),
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.products.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.products.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.products.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.products.destroy'),
+                ])
             ] + $locales;
 
     }

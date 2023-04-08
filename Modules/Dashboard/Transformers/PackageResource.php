@@ -28,6 +28,11 @@ class PackageResource extends JsonResource
                 'description' => $this->description,
                 'is_active' => (bool)$this->is_active,
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.packages.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.packages.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.packages.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.packages.destroy'),
+                ])
             ] + $locales;
 
     }

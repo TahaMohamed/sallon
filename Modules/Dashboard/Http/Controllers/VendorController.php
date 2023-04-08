@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Modules\Dashboard\Http\Requests\VendorRequest;
@@ -9,15 +10,15 @@ use Modules\Dashboard\Transformers\VendorResource;
 
 class VendorController extends DashboardController
 {
-    public function __construct(protected UserRepository $userRepository)
+    public function __construct(protected UserRepository $vendorRepository)
     {
+        $this->vendorRepository->where(['user_type' => User::VENDOR]);
     }
 
     public function index(Request $request)
     {
-        $vendors = $this->userRepository
-            ->with(['translation'])
-            ->withCount(['centers'])
+        $vendors = $this->vendorRepository
+            ->with(['center.translation'])
             ->allPaginate($request->per_page);
 
         return $this->paginateResponse(data: VendorResource::collection($vendors), collection: $vendors);
@@ -25,7 +26,7 @@ class VendorController extends DashboardController
 
     public function store(VendorRequest $request)
     {
-        $this->userRepository->create($request->validated() + ['added_by_id' => auth()->id()]);
+        $this->vendorRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'user_type' => User::VENDOR]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
@@ -41,23 +42,19 @@ class VendorController extends DashboardController
 
     private function showOrEdit(int $id, bool $isShow = true)
     {
-        $repo = $this->userRepository;
-        if (!$isShow){
-            $repo->withCount(['centers']);
-        }
-        $service = $repo->find($id, $isShow);
-        return $this->successResponse(data: VendorResource::make($service));
+        $vendor = $this->vendorRepository->with(['center.translation'])->find($id, $isShow);
+        return $this->successResponse(data: VendorResource::make($vendor));
     }
 
     public function update(VendorRequest $request, $id)
     {
-        $this->userRepository->update($request->validated(), $id);
+        $this->vendorRepository->update($request->validated(), $id);
         return $this->successResponse(message: __('dashboard.message.success_update'));
     }
 
     public function destroy($id)
     {
-        $this->userRepository->delete($id);
+        $this->vendorRepository->delete($id);
         return $this->successResponse(message: __('dashboard.message.success_delete'));
     }
 }

@@ -11,6 +11,7 @@ class CenterRequest extends FormRequest
 
     public function rules(): array
     {
+
         $rules = [
             'user_id' => 'required|exists:users,id,user_type,' . User::VENDOR,
             'city_id' => 'nullable|exists:cities,id',
@@ -18,7 +19,8 @@ class CenterRequest extends FormRequest
             'image' => 'nullable|mimes:jpg,jpeg,png,svg',
             'opened_at' => 'nullable|date_format:H:i',
             'closed_at' => 'nullable|date_format:H:i|after:opened_at',
-            'days_off' => 'nullable|in:' . join(',', WeekDays::casesValues()),
+            'days_off' => 'nullable|array',
+            'days_off.*' => 'nullable|in:' . join(',', WeekDays::casesValues()),
             'phone' => 'required|numeric|digits_between:6,20',
             'email' => 'nullable|email|max:50',
             'address' => 'nullable|string|max:150',
@@ -29,6 +31,7 @@ class CenterRequest extends FormRequest
             'services.*.service_id' => 'nullable|exists:services,id',
             'services.*.is_available' => 'nullable|boolean',
             'services.*.is_soon' => 'nullable|boolean',
+            'services.*.price' => 'required|numeric|gte:0',
         ];
         foreach (config('translatable.locales') as $locale) {
             $rules["$locale.name"] = 'required|string|max:255|unique:center_translations,name,' . $this->center . ',center_id';

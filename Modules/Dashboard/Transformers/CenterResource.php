@@ -43,6 +43,11 @@ class CenterResource extends JsonResource
                 'categories_count' => $this->whenCounted('categories'),
                 'products_count' => $this->whenCounted('products'),
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.centers.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.centers.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.centers.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.centers.destroy'),
+                ])
             ] + $locales;
 
     }

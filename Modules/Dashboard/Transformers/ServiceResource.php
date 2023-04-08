@@ -29,6 +29,11 @@ class ServiceResource extends JsonResource
                 'description' => $this->description,
                 'centers_count' => $this->whenCounted('centers'),
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.services.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.services.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.services.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.services.destroy'),
+                ])
             ] + $locales;
 
     }

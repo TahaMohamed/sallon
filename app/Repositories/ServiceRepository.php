@@ -4,20 +4,14 @@ namespace App\Repositories;
 
 use App\Contracts\RepositoryInterface;
 use App\Repositories\Actions\Operation;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Dashboard\Models\Service;
 
 class ServiceRepository extends Operation implements RepositoryInterface
 {
-    protected Service $service;
-
-    public function queryBuilder(): Builder
+    public function __construct()
     {
-        return Service::query()
-            ->when($this->getConditions(), fn($q) => $this->getConditions())
-            ->when($this->getWithRelation(), fn($q) => $this->with($this->getWithRelation()))
-            ->when($this->getCountRelation(), fn($q) => $this->withCount($this->getCountRelation()));
+        $this->setModel();
     }
 
     public function allPaginate(?int $perPage = null): LengthAwarePaginator
@@ -29,7 +23,7 @@ class ServiceRepository extends Operation implements RepositoryInterface
 
     public function create(array $data): void
     {
-        $this->store($this->service, $data);
+        $this->store(new Service, $data);
     }
 
     public function update(array $data, int $id): void
@@ -45,7 +39,7 @@ class ServiceRepository extends Operation implements RepositoryInterface
 
     public function find(int $id, ?bool $isShow = null): ?Service
     {
-        return $this->queryBuilder()
+        return $this->getQuery()
             ->when(! is_null($isShow), function ($q) use ($isShow){
                 $q->when(!$isShow, fn($q) => $q->with('translations'))
                     ->when($isShow, fn($q) => $q->with('translation'));
@@ -56,5 +50,10 @@ class ServiceRepository extends Operation implements RepositoryInterface
     private function store(Service $service, array $data)
     {
         $service->fill($data)->save();
+    }
+
+    public function setModel(): void
+    {
+        $this->model = Service::class;
     }
 }

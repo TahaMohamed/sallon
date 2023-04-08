@@ -29,6 +29,11 @@ class CityResource extends JsonResource
                 'is_active' => (bool)$this->is_active,
                 'country' => BasicDataResource::make($this->whenLoaded('country')),
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.cities.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.cities.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.cities.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.cities.destroy'),
+                ])
             ] + $locales;
     }
 }

@@ -49,4 +49,9 @@ class Center extends Model implements TranslatableContract
         return $this->belongsToMany(Service::class)->withPivot(['price','is_available','is_soon']);
     }
 
+    public function getDefaultImage(): string
+    {
+        return asset('assets/images/defaults/center.png');
+    }
+
 }

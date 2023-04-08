@@ -29,6 +29,11 @@ class CategoryResource extends JsonResource
                 'is_active' => (bool)$this->is_active,
                 'products_count' => $this->whenCounted('products'),
                 'created_at' => $this->created_at->format('Y-m-d'),
+                'actions' => $this->when($request->routeIs('dashboard.categories.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.categories.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.categories.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.categories.destroy'),
+                ])
             ] + $locales;
 
     }

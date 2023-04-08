@@ -22,7 +22,7 @@ class ProductController extends DashboardController
 
     public function store(ProductRequest $request)
     {
-        $this->productRepository->create($request->validated() + ['added_by_id' => auth()->user()]);
+        $this->productRepository->create($request->validated() + ['added_by_id' => auth()->id()]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
