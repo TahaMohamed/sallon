@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard\Http\Controllers;
 
+use App\Http\Resources\Api\BasicDataResource;
 use App\Repositories\CenterRepository;
 use Illuminate\Http\Request;
 use Modules\Dashboard\Http\Requests\CenterRequest;
@@ -21,6 +22,12 @@ class CenterController extends DashboardController
             ->withCount(['products','categories','services'])
             ->allPaginate($request->per_page);
         return $this->paginateResponse(data: CenterResource::collection($centers), collection: $centers);
+    }
+
+    public function list(Request $request)
+    {
+        $centers = $this->centerRepository->getQuery()->listsTranslations('name')->get();
+        return $this->successResponse(BasicDataResource::collection($centers));
     }
 
     public function store(CenterRequest $request)

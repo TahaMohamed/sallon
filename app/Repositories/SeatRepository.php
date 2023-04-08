@@ -5,9 +5,9 @@ namespace App\Repositories;
 use App\Contracts\RepositoryInterface;
 use App\Repositories\Actions\Operation;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Modules\Dashboard\Models\Service;
+use Modules\Dashboard\Models\Seat;
 
-class ServiceRepository extends Operation implements RepositoryInterface
+class SeatRepository extends Operation implements RepositoryInterface
 {
     public function __construct()
     {
@@ -23,13 +23,13 @@ class ServiceRepository extends Operation implements RepositoryInterface
 
     public function create(array $data): void
     {
-        $this->store(new Service, $data);
+        $this->store(new Seat, $data);
     }
 
     public function update(array $data, int $id): void
     {
-        $service = $this->find($id);
-        $this->store($service, $data);
+        $seat = $this->find($id);
+        $this->store($seat, $data);
     }
 
     public function delete(int $id): bool
@@ -37,7 +37,7 @@ class ServiceRepository extends Operation implements RepositoryInterface
         return $this->find($id)->delete();
     }
 
-    public function find(int $id, ?bool $isShow = null): ?Service
+    public function find(int $id, ?bool $isShow = null): ?Seat
     {
         return $this->getQuery()
             ->when(! is_null($isShow), function ($q) use ($isShow){
@@ -47,13 +47,13 @@ class ServiceRepository extends Operation implements RepositoryInterface
             ->findOrFail($id);
     }
 
-    private function store(Service $service, array $data)
+    private function store(Seat $seat, array $data)
     {
-        $service->fill($data)->save();
+        $seat->fill($data)->save();
     }
 
     public function setModel(): void
     {
-        $this->model = Service::class;
+        $this->model = Seat::class;
     }
 }

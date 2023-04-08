@@ -5,6 +5,7 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     CityController,
     CountryController,
     PackageController,
+    SeatController,
     ServiceController,
     CategoryController,
     ProductController,
@@ -22,6 +23,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'products' => ProductController::class,
         'centers' => CenterController::class,
         'vendors' => VendorController::class,
+        'seats' => SeatController::class,
     ], ['except' => ['create']]);
 
     Route::get('country/{country_id}/cities', [CityController::class, 'index']);
