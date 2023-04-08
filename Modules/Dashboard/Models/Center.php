@@ -44,6 +44,11 @@ class Center extends Model implements TranslatableContract
         return $this->belongsToMany(Category::class, 'products');
     }
 
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class)->withPivot(['price','is_available','is_soon']);

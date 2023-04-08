@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
                 'price' => (float)$this->price,
                 'is_active' => (bool)$this->is_active,
                 'category' => BasicDataResource::make($this->whenLoaded('category')),
+                'center' => BasicDataResource::make($this->whenLoaded('center')),
                 'attachments' => AttachmentResource::collection($this->whenLoaded('attachments')),
                 'created_at' => $this->created_at->format('Y-m-d'),
                 'actions' => $this->when($request->routeIs('dashboard.products.index'), [

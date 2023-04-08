@@ -62,6 +62,16 @@ class UserRepository extends Operation implements RepositoryInterface
 //        if ($user->user_type === User::ADMIN){
 //            $user->roles()->sync($data['roles']);
 //        }
+        match ($user->user_type){
+          User::EMPLOYEE => $this->setEmployeeData($user, $data),
+          default => null
+        };
+
+    }
+
+    private function setEmployeeData($user, $data)
+    {
+        $user->employee()->updateOrCreate(['center_id' => $data['center_id']], array_only($data,['center_id','department_id','seat_id','salary']));
     }
 
     public function setModel(): void

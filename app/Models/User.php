@@ -7,12 +7,17 @@ use App\Traits\MediaOperation;
 use App\Traits\StatisticOperation;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Dashboard\Models\Center;
+use Modules\Dashboard\Models\Department;
+use Modules\Dashboard\Models\Seat;
+use Modules\Vendor\Models\Employee;
 
 class User extends Authenticatable
 {
@@ -21,7 +26,8 @@ class User extends Authenticatable
     public const ADMIN = 'admin';
     public const CUSTOMER = 'customer';
     public const VENDOR = 'vendor';
-    public const TYPES = [self::SUPERADMIN, self::ADMIN, self::CUSTOMER, self::VENDOR];
+    public const EMPLOYEE = 'employee';
+    public const TYPES = [self::SUPERADMIN, self::ADMIN, self::CUSTOMER, self::VENDOR, self::EMPLOYEE];
     protected $guarded = ['created_at','id','updated_at'];
 
     protected $hidden = ['password', 'remember_token'];
@@ -68,5 +74,25 @@ class User extends Authenticatable
     public function center(): HasOne
     {
         return $this->hasOne(Center::class);
+    }
+
+    public function employeeCenter(): HasManyThrough
+    {
+        return $this->hasOneThrough(Center::class, Employee::class, 'user_id', 'id', 'id', 'center_id');
+    }
+
+    public function employeeSeat(): HasManyThrough
+    {
+        return $this->hasOneThrough(Seat::class, Employee::class, 'user_id', 'id', 'id', 'seat_id');
+    }
+
+    public function employeeDepartment(): HasManyThrough
+    {
+        return $this->hasOneThrough(Department::class, Employee::class, 'user_id', 'id', 'id', 'department_id');
+    }
+
+    public function employee():HasOne
+    {
+        return $this->hasOne(Employee::class);
     }
 }

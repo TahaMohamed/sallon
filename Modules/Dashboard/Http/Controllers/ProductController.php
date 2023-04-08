@@ -16,7 +16,7 @@ class ProductController extends DashboardController
 
     public function index(Request $request)
     {
-        $products = $this->productRepository->allPaginate($request->per_page);
+        $products = $this->productRepository->with(['center.translation','category.translation', 'attachments:id,image'])->allPaginate($request->per_page);
         return $this->paginateResponse(data: ProductResource::collection($products), collection: $products);
     }
 
@@ -38,11 +38,9 @@ class ProductController extends DashboardController
 
     private function showOrEdit(int $id, bool $isShow = true)
     {
-        $service = $this->productRepository;
-        if (!$isShow){
-            $service->with(['category.translation', 'attachments:id,image']);
-        }
-        $product = $service->find($id, $isShow);
+        $product = $this->productRepository
+            ->with(['center.translation','category.translation', 'attachments:id,image'])
+            ->find($id, $isShow);
         return $this->successResponse(data: ProductResource::make($product));
     }
 

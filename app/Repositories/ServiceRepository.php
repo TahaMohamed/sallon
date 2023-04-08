@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\RepositoryInterface;
 use App\Repositories\Actions\Operation;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Modules\Dashboard\Models\Service;
 
 class ServiceRepository extends Operation implements RepositoryInterface

@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Modules\Dashboard\Http\Controllers\{CenterController,
     CityController,
     CountryController,
+    DepartmentController,
+    EmployeeController,
     PackageController,
     SeatController,
     ServiceController,
@@ -19,10 +21,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'cities' => CityController::class,
         'packages' => PackageController::class,
         'services' => ServiceController::class,
+        'departments' => DepartmentController::class,
         'categories' => CategoryController::class,
         'products' => ProductController::class,
         'centers' => CenterController::class,
         'vendors' => VendorController::class,
+        'employees' => EmployeeController::class,
         'seats' => SeatController::class,
     ], ['except' => ['create']]);
 

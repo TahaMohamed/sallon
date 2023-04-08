@@ -16,7 +16,7 @@ class SeatController extends DashboardController
     public function index(Request $request)
     {
         $seats = $this->seatRepository
-            ->with(['center'])
+            ->with(['center.translation','translation','employee'])
             ->allPaginate($request->per_page);
 
         return $this->paginateResponse(data: SeatResource::collection($seats), collection: $seats);
@@ -40,7 +40,7 @@ class SeatController extends DashboardController
 
     private function showOrEdit(int $id, bool $isShow = true)
     {
-        $seat = $this->seatRepository->with(['center'])->find($id, $isShow);
+        $seat = $this->seatRepository->with(['center.translation','translation'])->find($id, $isShow);
         return $this->successResponse(data: SeatResource::make($seat));
     }
 
