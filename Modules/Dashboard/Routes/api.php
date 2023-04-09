@@ -8,6 +8,7 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     EmployeeController,
     PackageController,
     PackageFeatureController,
+    RoleController,
     SeatController,
     ServiceController,
     CategoryController,
@@ -29,8 +30,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'centers' => CenterController::class,
         'vendors' => VendorController::class,
         'employees' => EmployeeController::class,
+        'roles' => RoleController::class,
         'seats' => SeatController::class,
     ], ['except' => ['create']]);
 
+    Route::get('countries_list', [CountryController::class, 'list']);
+    Route::get('cities_list', [CityController::class, 'list']);
+    Route::get('roles_list', [RoleController::class, 'list']);
+    Route::get('permissions_list', [RoleController::class, 'listPermissions']);
     Route::get('country/{country_id}/cities', [CityController::class, 'index']);
+
 });
