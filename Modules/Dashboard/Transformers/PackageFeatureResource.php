@@ -6,7 +6,7 @@ use App\Http\Resources\Api\GlobalTransResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PackageResource extends JsonResource
+class PackageFeatureResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,17 +24,14 @@ class PackageResource extends JsonResource
         return [
                 'id' => $this->id,
                 'name' => $this->name,
-                'short_description' => $this->short_description,
                 'description' => $this->description,
-                'is_active' => (bool)$this->is_active,
+                'packages_count' => $this->whenCounted('packages'),
                 'created_at' => $this->created_at->format('Y-m-d'),
-                'features_count' => $this->whenCounted('features'),
-                'actions' => $this->when($request->routeIs('dashboard.packages.index'), [
-                    'show' => auth()->user()->hasPermission('dashboard.packages.show'),
-                    'update' => auth()->user()->hasPermission('dashboard.packages.update'),
-                    'destroy' => auth()->user()->hasPermission('dashboard.packages.destroy'),
+                'actions' => $this->when($request->routeIs('dashboard.package_features.index'), [
+                    'show' => auth()->user()->hasPermission('dashboard.package_features.show'),
+                    'update' => auth()->user()->hasPermission('dashboard.package_features.update'),
+                    'destroy' => auth()->user()->hasPermission('dashboard.package_features.destroy'),
                 ])
             ] + $locales;
-
     }
 }

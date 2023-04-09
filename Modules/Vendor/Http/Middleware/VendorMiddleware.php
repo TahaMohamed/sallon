@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Dashboard\Http\Middleware;
+namespace Modules\Vendor\Http\Middleware;
 
 use App\Models\User;
 use App\Traits\ApiResponse;
