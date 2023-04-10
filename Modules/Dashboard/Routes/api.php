@@ -16,6 +16,7 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     AdminController,
     CustomerController,
     VendorController};
+
 Route::middleware('auth:api')->get('/dashboard', function (Request $request) {
     return $request->user();
 });

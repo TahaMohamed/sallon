@@ -21,7 +21,7 @@ class ProductRequest extends FormRequest
             'deleted_attachments.*' => 'nullable|exists:product_media,id',
         ];
         foreach (config('translatable.locales') as $locale) {
-            $rules["$locale.name"] = 'required|string|max:255|unique:product_translations,name,' . $this->product . ',product_id';
+            $rules["$locale.name"] = 'required|string|max:150';
             $rules["$locale.description"] = 'nullable|string|max:500';
         }
         return $rules;

@@ -12,7 +12,7 @@ class ProductController extends VendorController
 
     public function __construct(protected ProductRepository $productRepository)
     {
-        $this->productRepository->where(['center_id',auth()->user()->center?->id]);
+        $this->productRepository->where(['center_id', auth()->user()?->center?->id]);
     }
 
     public function index(Request $request)
