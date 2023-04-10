@@ -11,12 +11,14 @@ class SeatController extends VendorController
 {
     public function __construct(protected SeatRepository $seatRepository)
     {
+        $this->seatRepository->where(['center_id', auth()->user()?->center?->id]);
     }
 
     public function index(Request $request)
     {
         $seats = $this->seatRepository
-            ->with(['center'])
+            ->with(['center.translation'])
+            ->withCount(['employees'])
             ->allPaginate($request->per_page);
 
         return $this->paginateResponse(data: SeatResource::collection($seats), collection: $seats);
@@ -24,7 +26,7 @@ class SeatController extends VendorController
 
     public function store(SeatRequest $request)
     {
-        $this->seatRepository->create($request->validated() + ['added_by_id' => auth()->id()]);
+        $this->seatRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'center_id' => auth()->user()->center?->id]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
@@ -40,7 +42,10 @@ class SeatController extends VendorController
 
     private function showOrEdit(int $id, bool $isShow = true)
     {
-        $seat = $this->seatRepository->with(['center'])->find($id, $isShow);
+        $seat = $this->seatRepository
+            ->with(['center.translation'])
+            ->withCount(['employees'])
+            ->find($id, $isShow);
         return $this->successResponse(data: SeatResource::make($seat));
     }
 

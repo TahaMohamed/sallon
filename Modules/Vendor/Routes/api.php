@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Modules\Vendor\Http\Controllers\ProductController;
+use Modules\Vendor\Http\Controllers\SeatController;
 
 
 Route::middleware('auth:api')->get('/vendor', function (Request $request) {
@@ -11,5 +12,6 @@ Route::middleware('auth:api')->get('/vendor', function (Request $request) {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resources([
         'products' => ProductController::class,
+        'seats' => SeatController::class,
     ], ['except' => ['create']]);
 });

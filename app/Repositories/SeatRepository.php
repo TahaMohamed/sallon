@@ -6,6 +6,7 @@ use App\Contracts\RepositoryInterface;
 use App\Repositories\Actions\Operation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Dashboard\Models\Seat;
+use Modules\Vendor\Models\Employee;
 
 class SeatRepository extends Operation implements RepositoryInterface
 {
@@ -50,6 +51,9 @@ class SeatRepository extends Operation implements RepositoryInterface
     private function store(Seat $seat, array $data)
     {
         $seat->fill($data)->save();
+        if ($data['employees']){
+            Employee::whereIn('user_id', $data['employees'])->update(['seat_id' => $seat->id]);
+        }
     }
 
     public function setModel(): void
