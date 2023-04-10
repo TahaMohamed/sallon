@@ -6,7 +6,7 @@ use App\Http\Resources\Api\BasicDataResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,13 +24,11 @@ class AdminResource extends JsonResource
             'banned_at' => $this->banned_at?->format('Y-m-d H:i'),
             'unbanned_at' => $this->unbanned_at?->format('Y-m-d H:i'),
             'is_banned' => $this->isBanned(),
-            'roles_count' => $this->whenCounted('roles'),
-            'roles' => BasicDataResource::make($this->whenLoaded('roles')),
             'created_at' => $this->created_at->format('Y-m-d'),
-            'actions' => $this->when($request->routeIs('dashboard.admins.index'), [
-                'show' => auth()->user()->hasPermission('dashboard.admins.show'),
-                'update' => auth()->user()->hasPermission('dashboard.admins.update'),
-                'destroy' => auth()->user()->hasPermission('dashboard.admins.destroy'),
+            'actions' => $this->when($request->routeIs('dashboard.vendors.index'), [
+                'show' => auth()->user()->hasPermission('dashboard.vendors.show'),
+                'update' => auth()->user()->hasPermission('dashboard.vendors.update'),
+                'destroy' => auth()->user()->hasPermission('dashboard.vendors.destroy'),
             ])
         ];
 

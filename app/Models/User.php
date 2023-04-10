@@ -70,7 +70,13 @@ class User extends Authenticatable
 
     public function hasPermission($routeName): bool
     {
-        return true;
+        return match ($this->user_type){
+            self::SUPERADMIN => true,
+            self::ADMIN => $this->roles()
+                ->whereHas('permissions', fn($q) => $q->where('permissions.route', $routeName))
+                ->exists(),
+            default => false
+        };
     }
 
     public function center(): HasOne

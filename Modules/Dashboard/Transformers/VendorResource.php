@@ -3,7 +3,6 @@
 namespace Modules\Dashboard\Transformers;
 
 use App\Http\Resources\Api\BasicDataResource;
-use App\Http\Resources\Api\GlobalTransResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
