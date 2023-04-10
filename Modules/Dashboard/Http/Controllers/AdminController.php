@@ -26,7 +26,12 @@ class AdminController extends DashboardController
 
     public function store(AdminRequest $request)
     {
-        $this->adminRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'user_type' => User::ADMIN]);
+        $this->adminRepository->create($request->validated() + [
+                'added_by_id' => auth()->id(),
+                'user_type' => User::ADMIN,
+                'password' => User::getIntialPassword()
+            ]);
+        //TODO: Send Login Data to user
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 

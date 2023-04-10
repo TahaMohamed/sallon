@@ -26,7 +26,11 @@ class EmployeeController extends DashboardController
 
     public function store(EmployeeRequest $request)
     {
-        $this->employeeRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'user_type' => User::EMPLOYEE]);
+        $this->employeeRepository->create($request->validated() + [
+                'added_by_id' => auth()->id(),
+                'user_type' => User::EMPLOYEE,
+                'password' => User::getIntialPassword()
+            ]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
