@@ -8,6 +8,7 @@ use App\Traits\StatisticOperation;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
@@ -16,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Dashboard\Models\Center;
 use Modules\Dashboard\Models\Department;
+use Modules\Dashboard\Models\Role;
 use Modules\Dashboard\Models\Seat;
 use Modules\Vendor\Models\Employee;
 
@@ -94,5 +96,10 @@ class User extends Authenticatable
     public function employee():HasOne
     {
         return $this->hasOne(Employee::class);
+    }
+
+    public function roles():BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
     }
 }

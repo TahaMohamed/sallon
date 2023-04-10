@@ -13,6 +13,7 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     ServiceController,
     CategoryController,
     ProductController,
+    AdminController,
     VendorController};
 Route::middleware('auth:api')->get('/dashboard', function (Request $request) {
     return $request->user();
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'categories' => CategoryController::class,
         'products' => ProductController::class,
         'centers' => CenterController::class,
+        'admins' => AdminController::class,
         'vendors' => VendorController::class,
         'employees' => EmployeeController::class,
         'roles' => RoleController::class,

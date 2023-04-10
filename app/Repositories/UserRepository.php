@@ -58,11 +58,9 @@ class UserRepository extends Operation implements RepositoryInterface
         }
 
         $user->fill($data)->save();
-//        TODO::After make roles
-//        if ($user->user_type === User::ADMIN){
-//            $user->roles()->sync($data['roles']);
-//        }
+
         match ($user->user_type){
+          User::ADMIN => $this->setAdminRoles($user, $data),
           User::EMPLOYEE => $this->setEmployeeData($user, $data),
           default => null
         };
@@ -72,6 +70,11 @@ class UserRepository extends Operation implements RepositoryInterface
     private function setEmployeeData($user, $data)
     {
         $user->employee()->updateOrCreate(['center_id' => $data['center_id']], array_only($data,['center_id','department_id','seat_id','salary']));
+    }
+
+    private function setAdminRoles($user, $data)
+    {
+        $user->roles()->sync($data['roles']);
     }
 
     public function setModel(): void
