@@ -15,6 +15,7 @@ class CenterRequest extends FormRequest
         $rules = [
             'user_id' => 'required|exists:users,id,user_type,' . User::VENDOR,
             'city_id' => 'nullable|exists:cities,id',
+            'specialty_id' => 'required|exists:specialties,id',
             'is_active' => 'nullable|boolean',
             'image' => 'nullable|mimes:jpg,jpeg,png,svg',
             'opened_at' => 'nullable|date_format:H:i',

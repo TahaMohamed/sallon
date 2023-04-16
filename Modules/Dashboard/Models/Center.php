@@ -34,6 +34,11 @@ class Center extends Model implements TranslatableContract
         return $this->belongsTo(City::class);
     }
 
+    public function specialty(): BelongsTo
+    {
+        return $this->belongsTo(Specialty::class);
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

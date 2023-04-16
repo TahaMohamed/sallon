@@ -15,6 +15,7 @@ use Modules\Dashboard\Http\Controllers\{CenterController,
     ProductController,
     AdminController,
     CustomerController,
+    SpecialtyController,
     VendorController};
 
 Route::middleware('auth:api')->get('/dashboard', function (Request $request) {
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'packages' => PackageController::class,
         'services' => ServiceController::class,
         'departments' => DepartmentController::class,
+        'specialties' => SpecialtyController::class,
         'categories' => CategoryController::class,
         'products' => ProductController::class,
         'centers' => CenterController::class,
@@ -39,6 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'seats' => SeatController::class,
     ], ['except' => ['create']]);
 
+    Route::get('categories_list', [CategoryController::class, 'list']);
+    Route::get('specialties_list', [SpecialtyController::class, 'list']);
     Route::get('countries_list', [CountryController::class, 'list']);
     Route::get('cities_list', [CityController::class, 'list']);
     Route::get('roles_list', [RoleController::class, 'list']);

@@ -24,14 +24,12 @@ class ServiceResource extends JsonResource
         return [
                 'id' => $this->id,
                 'name' => $this->name,
+                'price' => $this->centers->first()->pivot?->price,
+                'is_available' => (bool)$this->centers->first()->pivot?->is_available,
+                'is_soon' => (bool)$this->centers->first()->pivot?->is_soon,
                 'image' => $this->image,
                 'description' => $this->description,
                 'created_at' => $this->created_at->format('Y-m-d'),
-                'actions' => $this->when($request->routeIs('vendor.services.index'), [
-                    'show' => auth()->user()->hasPermission('vendor.services.show'),
-                    'update' => auth()->user()->hasPermission('vendor.services.update'),
-                    'destroy' => auth()->user()->hasPermission('vendor.services.destroy'),
-                ])
             ] + $locales;
 
     }

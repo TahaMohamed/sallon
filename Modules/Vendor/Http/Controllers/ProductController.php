@@ -12,7 +12,7 @@ class ProductController extends VendorController
 
     public function __construct(protected ProductRepository $productRepository)
     {
-        $this->productRepository->where(['center_id', auth()->user()?->center?->id]);
+        $this->productRepository->where(['center_id' => auth()->user()?->center?->id]);
     }
 
     public function index(Request $request)
@@ -25,7 +25,7 @@ class ProductController extends VendorController
 
     public function store(ProductRequest $request)
     {
-        $this->productRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'center_id', auth()->user()->center?->id]);
+        $this->productRepository->create($request->validated() + ['added_by_id' => auth()->id(), 'center_id' => auth()->user()->center?->id]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 

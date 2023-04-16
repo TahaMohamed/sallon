@@ -18,7 +18,7 @@ class CenterController extends DashboardController
     public function index(Request $request)
     {
         $centers = $this->centerRepository
-            ->with(['user','city'])
+            ->with(['user','city','specialty'])
             ->withCount(['products','categories','services'])
             ->allPaginate($request->per_page);
         return $this->paginateResponse(data: CenterResource::collection($centers), collection: $centers);
@@ -48,7 +48,7 @@ class CenterController extends DashboardController
 
     private function showOrEdit(int $id, bool $isShow = true)
     {
-        $service = $this->centerRepository->with(['user','city']);
+        $service = $this->centerRepository->with(['user','city','specialty']);
         if ($isShow){
             $service->withCount(['products','categories','services']);
         }

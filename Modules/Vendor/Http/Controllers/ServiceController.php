@@ -13,8 +13,11 @@ class ServiceController extends VendorController
     public function index(Request $request)
     {
         $services = Service::query()
-            ->with('translation')
-            ->active()
+            ->with(['translation','centers' => fn($q) => $q->where('user_id', auth()->id())])
+            ->where(function ($q){
+                $q->active()->whereRelation('centers','user_id', '<>' , auth()->id());
+                $q->orWhereRelation('centers','user_id' , auth()->id());
+            })
             ->when(@$request->filter['my_services'], function ($q){
                 $q->whereHas('centers', fn($q) => $q->where('centers.user_id', auth()->id()));
             })
@@ -58,7 +61,11 @@ class ServiceController extends VendorController
     private function showOrEdit(int $id, bool $show)
     {
         $service = Service::query()
-            ->whereHas('centers', fn($q) => $q->where('centers.user_id', auth()->id()))
+            ->where(function ($q){
+                $q->active()->whereRelation('centers','user_id', '<>' , auth()->id());
+                $q->orWhereRelation('centers','user_id' , auth()->id());
+            })
+            ->with(['centers' => fn($q) => $q->where('user_id', auth()->id())])
             ->when(!$show, fn($q) => $q->with('translations'))
             ->when($show, fn($q) => $q->with('translation'))
             ->findOrFail($id);
@@ -75,7 +82,7 @@ class ServiceController extends VendorController
         if ($service->added_by_id === auth()->id() && $service->centers_count === 1){
             $service->fill($request->validated())->save();
         }
-        $service->centers()->updateE([
+        $service->centers()->sync([
             auth()->user()->center?->id => $request->validated(['price','is_soon','is_available'])]);
         return $this->successResponse(message: __('dashboard.message.success_update'));
     }

@@ -28,8 +28,7 @@ class VendorController extends DashboardController
     {
         $this->vendorRepository->create($request->validated() + [
                 'added_by_id' => auth()->id(),
-                'user_type' => User::VENDOR,
-                'password' => User::getIntialPassword()
+                'user_type' => User::VENDOR
             ]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }

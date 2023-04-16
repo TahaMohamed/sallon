@@ -28,8 +28,7 @@ class EmployeeController extends DashboardController
     {
         $this->employeeRepository->create($request->validated() + [
                 'added_by_id' => auth()->id(),
-                'user_type' => User::EMPLOYEE,
-                'password' => User::getIntialPassword()
+                'user_type' => User::EMPLOYEE
             ]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }

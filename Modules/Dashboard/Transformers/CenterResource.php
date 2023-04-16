@@ -38,6 +38,7 @@ class CenterResource extends JsonResource
                 'lat' => $this->lat,
                 'lng' => $this->lng,
                 'city' => BasicDataResource::make($this->whenLoaded('city')),
+                'specialty' => BasicDataResource::make($this->whenLoaded('specialty')),
                 'user' => BasicDataResource::make($this->whenLoaded('user')),
                 'services_count' => $this->whenCounted('services'),
                 'categories_count' => $this->whenCounted('categories'),

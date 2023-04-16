@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public static function getIntialPassword($length = 8): string
     {
-        return '123445678'; //random_code(length: $length, letters: false,symbols: false);
+        return '12345678'; //random_code(length: $length, letters: false,symbols: false);
     }
 
     public function scopeIsBanned($q): Builder

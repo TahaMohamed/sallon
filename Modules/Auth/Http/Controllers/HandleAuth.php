@@ -20,7 +20,7 @@ trait HandleAuth
     protected function checkIfUserBanned($user)
     {
         throw_if($user?->isBanned(), new HttpResponseException(
-            $this->errorResponse(message: __('auth.banned',['reason' => $user->reason]),code: Response::HTTP_FORBIDDEN)
+            $this->errorResponse(message: __('auth.banned',['reason' => $user?->reason]),code: Response::HTTP_FORBIDDEN)
         ));
     }
 }

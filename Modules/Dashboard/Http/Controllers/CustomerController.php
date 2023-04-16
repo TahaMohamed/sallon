@@ -27,8 +27,7 @@ class CustomerController extends DashboardController
     {
         $this->customerRepository->create($request->validated() + [
                 'added_by_id' => auth()->id(),
-                'user_type' => User::CUSTOMER,
-                'password' => User::getIntialPassword()
+                'user_type' => User::CUSTOMER
             ]);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }

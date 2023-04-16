@@ -53,7 +53,7 @@ class UserRepository extends Operation implements RepositoryInterface
             $data['phone_verified_at'] = now();
         }
 
-        if (is_bool(@$data['is_email_verified']) &&  $data['is_email_verified'] && !$user?->email_verified_at){
+        if (is_bool(@$data['is_email_verified']) && @$data['email'] &&  $data['is_email_verified'] && !$user?->email_verified_at){
             $data['email_verified_at'] = now();
         }
 

@@ -28,8 +28,7 @@ class AdminController extends DashboardController
     {
         $this->adminRepository->create($request->validated() + [
                 'added_by_id' => auth()->id(),
-                'user_type' => User::ADMIN,
-                'password' => User::getIntialPassword()
+                'user_type' => User::ADMIN
             ]);
         //TODO: Send Login Data to user
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);

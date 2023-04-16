@@ -11,7 +11,7 @@ class SeatController extends VendorController
 {
     public function __construct(protected SeatRepository $seatRepository)
     {
-        $this->seatRepository->where(['center_id', auth()->user()?->center?->id]);
+        $this->seatRepository->where(['center_id' => auth()->user()?->center?->id]);
     }
 
     public function index(Request $request)
@@ -43,8 +43,7 @@ class SeatController extends VendorController
     private function showOrEdit(int $id, bool $isShow = true)
     {
         $seat = $this->seatRepository
-            ->with(['center.translation'])
-            ->withCount(['employees'])
+            ->with(['center.translation','users'])
             ->find($id, $isShow);
         return $this->successResponse(data: SeatResource::make($seat));
     }
