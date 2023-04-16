@@ -51,7 +51,7 @@ class SeatRepository extends Operation implements RepositoryInterface
     private function store(Seat $seat, array $data)
     {
         $seat->fill($data)->save();
-        if ($data['employees']){
+        if (@$data['employees']){
             Employee::whereIn('user_id', $data['employees'])->update(['seat_id' => $seat->id]);
         }
     }

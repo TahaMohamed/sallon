@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Vendor\Http\Controllers\{
-    DepartmentController,
+use Modules\Vendor\Http\Controllers\{DepartmentController,
+    EmployeeController,
     ProductController,
     SeatController,
-    ServiceController
-};
+    ServiceController};
 
 
 Route::middleware('auth:api')->get('/vendor', function (Request $request) {
@@ -19,6 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'services' => ServiceController::class,
         'products' => ProductController::class,
         'seats' => SeatController::class,
+        'employees' => EmployeeController::class,
     ], ['except' => ['create']]);
 
     Route::post('assign_services', [ServiceController::class, 'assignToMe']);

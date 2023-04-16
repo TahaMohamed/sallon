@@ -10,7 +10,7 @@ class SeatRequest extends FormRequest
 
     public function rules(): array
     {
-        $center_id = $this->user()->ceneter?->id;
+        $center_id = $this->user()->center?->id;
         $rules = [
             'code' => 'required|alpha_dash:ascii|max:8|unique:seats,code,' . $this->seat . ',id,center_id,' . $center_id,
             'employees' => 'nullable|array',

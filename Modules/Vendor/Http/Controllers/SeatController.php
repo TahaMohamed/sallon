@@ -11,7 +11,6 @@ class SeatController extends VendorController
 {
     public function __construct(protected SeatRepository $seatRepository)
     {
-        $this->seatRepository->where(['center_id' => auth()->user()?->center?->id]);
     }
 
     public function index(Request $request)
@@ -19,6 +18,7 @@ class SeatController extends VendorController
         $seats = $this->seatRepository
             ->with(['center.translation'])
             ->withCount(['employees'])
+            ->where(['center_id' => auth()->user()->center?->id])
             ->allPaginate($request->per_page);
 
         return $this->paginateResponse(data: SeatResource::collection($seats), collection: $seats);
@@ -44,19 +44,20 @@ class SeatController extends VendorController
     {
         $seat = $this->seatRepository
             ->with(['center.translation','users'])
+            ->where(['center_id' => auth()->user()->center?->id])
             ->find($id, $isShow);
         return $this->successResponse(data: SeatResource::make($seat));
     }
 
     public function update(SeatRequest $request, $id)
     {
-        $this->seatRepository->update($request->validated(), $id);
+        $this->seatRepository->where(['center_id' => auth()->user()->center?->id])->update($request->validated(), $id);
         return $this->successResponse(message: __('dashboard.message.success_update'));
     }
 
     public function destroy($id)
     {
-        $this->seatRepository->delete($id);
+        $this->seatRepository->where(['center_id' => auth()->user()->center?->id])->delete($id);
         return $this->successResponse(message: __('dashboard.message.success_delete'));
     }
 }
