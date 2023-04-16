@@ -18,6 +18,10 @@ class VendorResource extends JsonResource
         return [
                 'id' => $this->id,
                 'name' => $this->name,
+                'identity_number' => $this->identity_number,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'reason' => $this->reason,
                 'image' => $this->image,
                 'email_verified_at' => $this->email_verified_at?->format('Y-m-d H:i'),
                 'phone_verified_at' => $this->phone_verified_at?->format('Y-m-d H:i'),

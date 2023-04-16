@@ -15,6 +15,9 @@ class ServiceRequest extends FormRequest
     {
         $rules = [
             'is_active' => 'nullable|boolean',
+            'is_available' => 'nullable|boolean',
+            'is_soon' => 'nullable|boolean',
+            'price' => 'required|numeric|gte:0',
             'image' => 'nullable|mimes:jpg,jpeg,png,svg'
         ];
         foreach (config('translatable.locales') as $locale) {

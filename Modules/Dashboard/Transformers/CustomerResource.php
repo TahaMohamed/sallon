@@ -18,6 +18,10 @@ class CustomerResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'identity_number' => $this->identity_number,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'reason' => $this->reason,
             'image' => $this->image,
             'email_verified_at' => $this->email_verified_at?->format('Y-m-d H:i'),
             'phone_verified_at' => $this->phone_verified_at?->format('Y-m-d H:i'),
@@ -25,10 +29,10 @@ class CustomerResource extends JsonResource
             'unbanned_at' => $this->unbanned_at?->format('Y-m-d H:i'),
             'is_banned' => $this->isBanned(),
             'created_at' => $this->created_at->format('Y-m-d'),
-            'actions' => $this->when($request->routeIs('dashboard.vendors.index'), [
-                'show' => auth()->user()->hasPermission('dashboard.vendors.show'),
-                'update' => auth()->user()->hasPermission('dashboard.vendors.update'),
-                'destroy' => auth()->user()->hasPermission('dashboard.vendors.destroy'),
+            'actions' => $this->when($request->routeIs('dashboard.customers.index'), [
+                'show' => auth()->user()->hasPermission('dashboard.customers.show'),
+                'update' => auth()->user()->hasPermission('dashboard.customers.update'),
+                'destroy' => auth()->user()->hasPermission('dashboard.customers.destroy'),
             ])
         ];
 

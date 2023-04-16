@@ -3,44 +3,43 @@
 namespace Modules\Vendor\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Modules\Dashboard\Models\Service;
-use Modules\Vendor\Http\Requests\{ServiceRequest, AssignExistsServiceRequest};
-use Modules\Vendor\Transformers\ServiceResource;
+use Modules\Dashboard\Models\Department;
+use Modules\Vendor\Http\Requests\{DepartmentRequest, AssignExistsDepartmentRequest};
+use Modules\Vendor\Transformers\DepartmentResource;
 
-class ServiceController extends VendorController
+class DepartmentController extends VendorController
 {
     public function index(Request $request)
     {
-        $services = Service::query()
+        $departments = Department::query()
             ->with(['translation','centers' => fn($q) => $q->where('user_id', auth()->id())])
             ->where(function ($q){
                 $q->active()->whereRelation('centers','user_id', '<>' , auth()->id());
                 $q->orWhereRelation('centers','user_id' , auth()->id());
             })
-            ->when(@$request->filter['my_services'], function ($q){
+            ->when(@$request->filter['my_departments'], function ($q){
                 $q->whereHas('centers', fn($q) => $q->where('centers.user_id', auth()->id()));
             })
             ->latest('id')
             ->paginate((int)($request->per_page ?? config("globals.pagination.per_page")));
 
-        return $this->paginateResponse(data: ServiceResource::collection($services), collection: $services);
+        return $this->paginateResponse(data: DepartmentResource::collection($departments), collection: $departments);
     }
 
-    public function store(ServiceRequest $request)
+    public function store(DepartmentRequest $request)
     {
-        $service = Service::where(function ($q) use ($request){
+        $department = Department::where(function ($q) use ($request){
             foreach (config('translatable.locales') as $locale){
                 $q->orWhereTranslation('name', $request->{$locale}['name'], $locale);
             }
         })->firstOrNew();
-        $this->create($request->validated() + ['added_by_id' => auth()->id()], $service);
+        $this->create($request->validated() + ['added_by_id' => auth()->id()], $department);
         return $this->successResponse(message: __('dashboard.message.success_add'), code: 201);
     }
 
-    public function assignToMe(AssignExistsServiceRequest $request)
+    public function assignToMe(AssignExistsDepartmentRequest $request)
     {
-        auth()->user()->center->services()->sync(Arr::keyBy($request->validated(['services']), 'service_id'));
+        auth()->user()->center->departments()->sync($request->validated(['departments']));
         return $this->successResponse(message: __('dashboard.message.success_update'), code: 201);
     }
 
@@ -56,7 +55,7 @@ class ServiceController extends VendorController
 
     private function showOrEdit(int $id, bool $show)
     {
-        $service = Service::query()
+        $department = Department::query()
             ->where(function ($q){
                 $q->active()->whereRelation('centers','user_id', '<>' , auth()->id());
                 $q->orWhereRelation('centers','user_id' , auth()->id());
@@ -66,40 +65,37 @@ class ServiceController extends VendorController
             ->when($show, fn($q) => $q->with('translation'))
             ->findOrFail($id);
 
-        return $this->successResponse(data: ServiceResource::make($service));
+        return $this->successResponse(data: DepartmentResource::make($department));
     }
 
-    public function update(ServiceRequest $request, $id)
+    public function update(DepartmentRequest $request, $id)
     {
-        $service = Service::query()
+        $department = Department::query()
             ->withCount('centers')
             ->whereHas('centers', fn($q) => $q->where('centers.user_id', auth()->id()))
             ->findOrFail($id);
-        $this->create($request->validated(), $service);
-
+        $this->create($request->validated(), $department);
         return $this->successResponse(message: __('dashboard.message.success_update'));
     }
 
     public function destroy($id)
     {
-        $service = Service::query()
+        $department = Department::query()
             ->withCount('centers')
             ->whereHas('centers', fn($q) => $q->where('centers.user_id', auth()->id()))
             ->findOrFail($id);
-        if ($service->added_by_id === auth()->id() && $service->centers_count === 1){
-            $service->delete();
+        if ($department->added_by_id === auth()->id() && $department->centers_count === 1){
+            $department->delete();
         }
-        $service->centers()->detach(auth()->user()->center?->id);
+        $department->centers()->detach(auth()->user()->center?->id);
         return $this->successResponse(message: __('dashboard.message.success_delete'));
     }
 
-    private function create($data, $service)
+    private function create($data, $department)
     {
-        if (!$service->getKey() || $service->added_by_id === auth()->id() && $service->centers_count === 1){
-            $service->fill($data)->save();
+        if (!$department->getKey() || ($department->added_by_id === auth()->id() && $department->centers_count === 1)){
+            $department->fill($data)->save();
         }
-        $service->centers()->sync([
-            auth()->user()->center?->id => array_only($data,['price','is_soon','is_available'])
-        ]);
+        $department->centers()->sync(auth()->user()->center?->id);
     }
 }
